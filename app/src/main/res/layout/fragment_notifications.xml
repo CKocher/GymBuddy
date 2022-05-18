@@ -13,15 +13,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/headline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bittw wählen Sie ihr Gerät aus:" />
+            android:text="Bittw wählen Sie ihr Gerät aus:"
+            android:textAlignment="center"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/idRVCourse"
             android:layout_width="match_parent"
             android:layout_height="1400px" />
+
     </LinearLayout>
 
 </RelativeLayout>

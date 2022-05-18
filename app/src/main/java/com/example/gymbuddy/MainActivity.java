@@ -25,6 +25,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.gymbuddy.EventBusMessages.StartScan;
+import com.example.gymbuddy.adapter.DeviceModel;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
 import com.example.gymbuddy.common.Constants;
@@ -47,6 +49,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gymbuddy.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        EventBus.getDefault().register(this);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -411,14 +417,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         Log.d(TAG, "startScanning() called");
         mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
-        if (mScanningLottieView.getVisibility() != View.VISIBLE) {
-            changeVisibility(mScanningLottieView, View.VISIBLE);
-        }
 
         showPreviouslyConnectedDevice();
 
         // Begin Scan
         Log.d(TAG, "Started Scanning for BLE devices");
+
+        mBluetoothLeScanner.startScan(null, bluetoothLeScanSettings, bluetoothLeScanCallback);
     }
 
     @Override
@@ -621,6 +626,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
                     changeVisibility(mRecyclerView, View.VISIBLE);
                     changeVisibility(mScanningLottieView, View.GONE);
 
+                    EventBus.getDefault().post(new DeviceModel(result.getDevice().getName(), result.getDevice().getAddress(), R.drawable.ble_not_connected));
                    // mRvAdapter.setDeviceList(mBleDeviceList);
                    // mRvAdapter.notifyDataSetChanged();
                 }
@@ -657,4 +663,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
       //  mRvAdapter.setCurrentDeviceState(mCurrentState, position);
       //  mRvAdapter.notifyDataSetChanged();
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(StartScan event)
+    {
+       System.out.println("start scan");
+       startScanning();
+    };
 }

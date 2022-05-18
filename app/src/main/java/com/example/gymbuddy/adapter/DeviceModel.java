@@ -3,11 +3,11 @@ package com.example.gymbuddy.adapter;
 public class DeviceModel {
 
     private String course_name;
-    private int course_rating;
+    private String course_rating;
     private int course_image;
 
     // Constructor
-    public DeviceModel(String course_name, int course_rating, int course_image) {
+    public DeviceModel(String course_name, String course_rating, int course_image) {
         this.course_name = course_name;
         this.course_rating = course_rating;
         this.course_image = course_image;
@@ -22,11 +22,11 @@ public class DeviceModel {
         this.course_name = course_name;
     }
 
-    public int getCourse_rating() {
+    public String getCourse_rating() {
         return course_rating;
     }
 
-    public void setCourse_rating(int course_rating) {
+    public void setCourse_rating(String course_rating) {
         this.course_rating = course_rating;
     }
 

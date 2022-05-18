@@ -37,7 +37,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.Viewholder
         // to set data to textview and imageview of each card layout
         DeviceModel model = courseModelArrayList.get(position);
         holder.courseNameTV.setText(model.getCourse_name());
-        holder.courseRatingTV.setText("67676");
+        holder.courseRatingTV.setText("BT-Adresse: "+model.getCourse_rating());
         holder.courseIV.setImageResource(model.getCourse_image());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
