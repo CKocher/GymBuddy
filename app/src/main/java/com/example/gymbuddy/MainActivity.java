@@ -18,29 +18,21 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayoutStates;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.gymbuddy.EventBusMessages.Bizeps;
+import com.example.gymbuddy.EventBusMessages.NewExercise;
 import com.example.gymbuddy.EventBusMessages.ConnectToDevice;
 import com.example.gymbuddy.EventBusMessages.Connected;
 import com.example.gymbuddy.EventBusMessages.IsConnectedRequest;
@@ -48,6 +40,7 @@ import com.example.gymbuddy.EventBusMessages.IsConnectedResponse;
 import com.example.gymbuddy.EventBusMessages.StartScan;
 import com.example.gymbuddy.EventBusMessages.StopScan;
 import com.example.gymbuddy.EventBusMessages.SwitchToBluetoothFragment;
+import com.example.gymbuddy.EventBusMessages.SwitchToDashboard;
 import com.example.gymbuddy.adapter.DeviceModel;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
@@ -55,24 +48,18 @@ import com.example.gymbuddy.common.Constants;
 import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.contract.MainActivityContract;
 import com.example.gymbuddy.data.BleDeviceDataObject;
+
 import com.example.gymbuddy.databinding.ActivityMainBinding;
 import com.example.gymbuddy.model.DataManager;
 import com.example.gymbuddy.service.BleConnectivityService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.Observer;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -733,7 +720,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     };
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(Bizeps event)
+    public void onEvent(NewExercise event)
     {
         mService.getRepDetector().setActiveEnum(DrillEnums.BIZEPSCURLS);
         if (thread != null) {
@@ -758,6 +745,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     {
 
         EventBus.getDefault().post(new IsConnectedResponse(connected));
+
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SwitchToDashboard event)
+    {
+        // navController.navigate(R.id.navigation_notifications);
+        navView.setSelectedItemId(R.id.navigation_dashboard);
 
     };
 }

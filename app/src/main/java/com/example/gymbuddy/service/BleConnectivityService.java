@@ -20,21 +20,29 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+import android.media.metrics.Event;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.example.gymbuddy.EventBusMessages.Connected;
+import com.example.gymbuddy.EventBusMessages.NewExercise;
+import com.example.gymbuddy.EventBusMessages.RepDetected;
+import com.example.gymbuddy.EventBusMessages.SetComplete;
+import com.example.gymbuddy.R;
 import com.example.gymbuddy.common.CharacteristicTypes;
 import com.example.gymbuddy.common.ConnectionStates;
 import com.example.gymbuddy.common.Constants;
 import com.example.gymbuddy.common.GattAttributes;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -234,7 +242,7 @@ public class BleConnectivityService extends Service {
         super.onCreate();
         Log.d(TAG, "onCreate() called");
         repDetector = new com.example.gymbuddy.service.RepDetector();
-
+        EventBus.getDefault().register(this);
     }
 
     @Nullable
@@ -321,8 +329,10 @@ public class BleConnectivityService extends Service {
         }
 
          boolean detected = repDetector.detectRep(pitch, roll,yaw);
+        System.out.println("Detected " + detected + " " + repDetector.getActiveEnum() + " " + repDetector.isActive);
          if (detected){
              reps++;
+             EventBus.getDefault().post(new RepDetected(reps));
              Log.d(TAG,"REP DETECTED");
 
          }
@@ -720,4 +730,20 @@ public class BleConnectivityService extends Service {
     public void setRepDetector(com.example.gymbuddy.service.RepDetector repDetector) {
         this.repDetector = repDetector;
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(NewExercise event)
+    {
+        reps = 0;
+
+        repDetector = new RepDetector();
+        repDetector.setActiveEnum(event.getKind());
+        repDetector.isActive = true;
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SetComplete event)
+    {
+        reps = 0;
+    };
 }

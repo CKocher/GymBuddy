@@ -8,21 +8,25 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ExpandableListDataItems {
+    public static HashMap<String, List<WorkoutExercise>> expandableDetailList = new HashMap<>();
     public static HashMap<String, List<WorkoutExercise>> getData() {
-        HashMap<String, List<WorkoutExercise>> expandableDetailList = new HashMap<>();
         List<WorkoutExercise> workoutExercises = new ArrayList<>();
 
-        WorkoutExercise uebung1 = new WorkoutExercise("Bizepscurls", (float)150.3, 10, 3);
+        WorkoutExercise uebung1 = new WorkoutExercise("Bizepscurls", (float)150.3, 2, 2);
         uebung1.drillEnums = DrillEnums.BIZEPSCURLS;
         uebung1.finishedReps++;
-        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.6, 10, 1);
+
+
+
+        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.6, 2, 2);
         uebung2.drillEnums = DrillEnums.SEITHEBEN;
         uebung2.finishedReps = 5;
         workoutExercises.add(uebung1);
         workoutExercises.add(uebung2);
 
-        expandableDetailList.put("Legday - 16.05.2022", workoutExercises);
+        expandableDetailList.put("Krasses Workout - 16.05.2022", workoutExercises);
 
         return expandableDetailList;
     }
+
 }

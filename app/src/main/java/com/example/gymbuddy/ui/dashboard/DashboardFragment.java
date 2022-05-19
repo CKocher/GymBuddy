@@ -30,10 +30,10 @@ public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
     private FragmentDashboardBinding binding;
-    ExpandableListView expandableListViewExample;
-    ExpandableListAdapter expandableListAdapter;
-    List<String> expandableTitleList;
-    HashMap<String, List<WorkoutExercise>> expandableDetailList;
+    private ExpandableListView expandableListViewExample;
+    private ExpandableListAdapter expandableListAdapter;
+    private List<String> expandableTitleList;
+    private HashMap<String, List<WorkoutExercise>> expandableDetailList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -92,8 +92,21 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public List<String> getExpandableTitleList() {
+        return expandableTitleList;
+    }
+
+    public HashMap<String, List<WorkoutExercise>> getExpandableDetailList() {
+        return expandableDetailList;
     }
 }

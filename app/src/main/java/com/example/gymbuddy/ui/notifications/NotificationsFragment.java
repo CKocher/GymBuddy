@@ -1,15 +1,11 @@
 package com.example.gymbuddy.ui.notifications;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gymbuddy.EventBusMessages.Bizeps;
 import com.example.gymbuddy.EventBusMessages.StartScan;
 import com.example.gymbuddy.EventBusMessages.StopScan;
 import com.example.gymbuddy.R;
@@ -34,8 +29,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class NotificationsFragment extends Fragment {
 
@@ -86,7 +79,7 @@ public class NotificationsFragment extends Fragment {
         bizeps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            EventBus.getDefault().post(new Bizeps());
+
             }
         });
 

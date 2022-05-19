@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
     <!-- RelativeLayout places the components vertically one by one.
 	Necessary parameters also specified so that elegant output can be seen -->
-    <RelativeLayout
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -14,15 +15,31 @@
 
         <!-- ExpandableListView is used in relativelayout
             The android:indicatorLeft is the left bound for an items indicator.-->
-        <ExpandableListView
-            android:id="@+id/expandableListViewSample"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0.5dp"
-            android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
-            />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="378dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
+        android:text="Verfügbare Workouts"
+        android:textAlignment="center"
+        android:textSize="30dp" />
 
-    </RelativeLayout>
+    <ExpandableListView
+        android:id="@+id/expandableListViewSample"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:divider="@null"
+        android:dividerHeight="0.5dp"
+        android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft">
+
+    </ExpandableListView>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</LinearLayout>
     <!-- Note: We cannot use the value wrap_content for the android:layout_height
         attribute of the ExpandableListView in XML. -->

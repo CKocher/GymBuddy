@@ -1,7 +1,16 @@
 package com.example.gymbuddy.service;
 
 
+import android.media.metrics.Event;
+
+import com.example.gymbuddy.EventBusMessages.ActivateDeactivate;
+import com.example.gymbuddy.EventBusMessages.NewExercise;
+import com.example.gymbuddy.EventBusMessages.RepDetected;
 import com.example.gymbuddy.common.DrillEnums;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class RepDetector {
 
@@ -13,30 +22,33 @@ public class RepDetector {
     private boolean up1 = false;
     private boolean up2 = false;
     private DrillEnums activeEnum = DrillEnums.BIZEPSCURLS;
+    public boolean isActive = false;
 
 
 
     public RepDetector(){
-
+        EventBus.getDefault().register(this);
     }
-
-
-
 
     public boolean detectRep( int pitch, int roll, int yaw){
 
         if (activeEnum.equals(DrillEnums.BIZEPSCURLS)){
             System.out.println("detect pitch:"+pitch);
-            return checkBooleans(90,0,-90,pitch);
+            return checkBooleans(70,0,-70,pitch);
         }
 
         if (activeEnum.equals(DrillEnums.SEITHEBEN)){
-            return checkBooleans(-10, -45,-90,pitch);
+            return checkBooleans(-20, -45,-70,pitch);
         }
         return false;
     }
 
     private boolean checkBooleans(int high, int mid, int low, int angle){
+
+        if (!isActive){
+            return false;
+        }
+
         if (angle > high){
 
             if (middle && low1 && up1){
@@ -61,6 +73,7 @@ public class RepDetector {
 
         if ((middle && low1 && up1 && up2) || (middle && up1 && low1 && low2)){
             resetBooleans();
+
             return true;
         }
         return false;
@@ -77,5 +90,20 @@ public class RepDetector {
     public void setActiveEnum(DrillEnums activeEnum) {
         this.activeEnum = activeEnum;
     }
+
+    public DrillEnums getActiveEnum() {
+        return activeEnum;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ActivateDeactivate event)
+    {
+        if (event.isOnoff()){
+            isActive = true;
+        }else{
+            isActive = false;
+        }
+
+    };
 }
 

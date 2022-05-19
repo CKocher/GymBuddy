@@ -2,10 +2,12 @@ package com.example.gymbuddy.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,6 +22,8 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableTitleList;
     private HashMap<String, List<WorkoutExercise>> expandableDetailList;
+
+
 
     // constructor
     public CustomizedExpandableListAdapter(Context context, List<String> expandableListTitle,
@@ -58,8 +62,14 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView exerciseProperties = (TextView) convertView.findViewById(R.id.idTVCourseRating);
         exerciseProperties.setText(String.valueOf(expandedListText.weight)+"kg x "+String.valueOf(expandedListText.reps)+ " reps x " + String.valueOf(expandedListText.sets)+ " sets");
-        ProgressBar progressBar = convertView.findViewById(R.id.progressBar);
-        progressBar.setProgress(expandedListText.progressPercentage);
+
+        if (expandedListText.succesfullyFinished){
+            ImageView img= convertView.findViewById(R.id.imageView4);
+            Drawable myDrawable = context.getResources().getDrawable(R.drawable.arrow_down);
+            img.setImageDrawable(myDrawable);
+        }
+
+
         return convertView;
     }
 

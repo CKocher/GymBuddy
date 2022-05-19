@@ -9,8 +9,10 @@ public class WorkoutExercise {
     public int sets;
     public boolean done = false;
     public int finishedReps = 0;
+    public int finishedSets = 0;
     public DrillEnums drillEnums;
     public int progressPercentage = 75;
+    public boolean succesfullyFinished = false;
 
 
     public WorkoutExercise(String uebungsname , float gewicht, int wiederholungen, int saetze){
