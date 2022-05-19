@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.gymbuddy.R;
@@ -57,7 +58,8 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView exerciseProperties = (TextView) convertView.findViewById(R.id.idTVCourseRating);
         exerciseProperties.setText(String.valueOf(expandedListText.weight)+"kg x "+String.valueOf(expandedListText.reps)+ " reps x " + String.valueOf(expandedListText.sets)+ " sets");
-
+        ProgressBar progressBar = convertView.findViewById(R.id.progressBar);
+        progressBar.setProgress(expandedListText.progressPercentage);
         return convertView;
     }
 

@@ -34,6 +34,7 @@ import androidx.constraintlayout.widget.ConstraintLayoutStates;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +43,11 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.example.gymbuddy.EventBusMessages.Bizeps;
 import com.example.gymbuddy.EventBusMessages.ConnectToDevice;
 import com.example.gymbuddy.EventBusMessages.Connected;
+import com.example.gymbuddy.EventBusMessages.IsConnectedRequest;
+import com.example.gymbuddy.EventBusMessages.IsConnectedResponse;
 import com.example.gymbuddy.EventBusMessages.StartScan;
 import com.example.gymbuddy.EventBusMessages.StopScan;
+import com.example.gymbuddy.EventBusMessages.SwitchToBluetoothFragment;
 import com.example.gymbuddy.adapter.DeviceModel;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
@@ -93,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner mBluetoothLeScanner;
     private BleConnectivityService mService;
+    private boolean connected = false;
 
     private ActivityMainBinding mBinding;
 
@@ -110,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private boolean mIsLedButtonClicked = false;
     AngularVelocityThread thread = null;
     private View selectedView;
+    NavController navController;
+    BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,13 +126,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EventBus.getDefault().register(this);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
@@ -487,7 +494,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         enableButtons();
         prepareDisconnectButton();
         updateAdapterConnectionState(-1);
-
+        connected = true;
 
     }
 
@@ -507,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         mBinding.tvConnectivityStatus.setTextColor(getResources().getColor(R.color.red_500));
         switchButtonText(mBinding.btnStartScanning, getResources().getString(R.string.connect));
         */
-
+        connected = false;
     }
 
     @Override
@@ -736,4 +743,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         thread.start();
     };
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SwitchToBluetoothFragment event)
+    {
+       // navController.navigate(R.id.navigation_notifications);
+        navView.setSelectedItemId(R.id.navigation_notifications);
+
+    };
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(IsConnectedRequest event)
+    {
+
+        EventBus.getDefault().post(new IsConnectedResponse(connected));
+
+    };
 }

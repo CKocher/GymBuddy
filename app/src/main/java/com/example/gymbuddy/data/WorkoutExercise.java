@@ -10,6 +10,7 @@ public class WorkoutExercise {
     public boolean done = false;
     public int finishedReps = 0;
     public DrillEnums drillEnums;
+    public int progressPercentage = 75;
 
 
     public WorkoutExercise(String uebungsname , float gewicht, int wiederholungen, int saetze){

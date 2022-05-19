@@ -80,15 +80,12 @@ public class DashboardFragment extends Fragment {
                                         int groupPosition, int childPosition, long id) {
                 Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " -> " + expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).name, Toast.LENGTH_SHORT).show();
 
-                int target = expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).sets * expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).reps;
-                int percentage = (expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).finishedReps*100 / target*100);
 
-                ProgressBar progressBar = v.findViewById(R.id.progressBar);
-                progressBar.setProgress(percentage/100);
 
                 return false;
             }
         });
+
 
 
         return root;
