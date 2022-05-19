@@ -2,7 +2,7 @@
     <string name="app_name">GymBuddy</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_notifications">Bluetooth</string>
 
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>

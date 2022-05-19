@@ -24,8 +24,9 @@ public class RepDetector {
 
 
     public boolean detectRep( int pitch, int roll, int yaw){
-        System.out.println("detectRep:"+pitch);
+
         if (activeEnum.equals(DrillEnums.BIZEPSCURLS)){
+            System.out.println("detect pitch:"+pitch);
             return checkBooleans(90,0,-90,pitch);
         }
 

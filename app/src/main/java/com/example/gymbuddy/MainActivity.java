@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.metrics.Event;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -24,12 +27,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayoutStates;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.gymbuddy.EventBusMessages.Bizeps;
+import com.example.gymbuddy.EventBusMessages.ConnectToDevice;
+import com.example.gymbuddy.EventBusMessages.Connected;
 import com.example.gymbuddy.EventBusMessages.StartScan;
+import com.example.gymbuddy.EventBusMessages.StopScan;
 import com.example.gymbuddy.adapter.DeviceModel;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
 import com.example.gymbuddy.common.Constants;
+import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.contract.MainActivityContract;
 import com.example.gymbuddy.data.BleDeviceDataObject;
 import com.example.gymbuddy.model.DataManager;
@@ -89,10 +108,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private Intent mServiceIntent;
     private boolean mIsLedButtonClicked = false;
     AngularVelocityThread thread = null;
+    private View selectedView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -108,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        initializeComponents();
 
     }
 
@@ -430,10 +452,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void stopScanning() {
         Log.d(TAG, "stopScanning() called");
 
-        if (mScanningLottieView.getVisibility() != View.VISIBLE) {
-            changeVisibility(mScanningLottieView, View.VISIBLE);
-            changeVisibility(mRecyclerView, View.GONE);
-        }
+        mBluetoothLeScanner.stopScan(bluetoothLeScanCallback);
         mBleDeviceList.clear();
 
     }
@@ -531,6 +550,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void connectToDevice(String address) {
         Log.d(TAG, "connectToDevice() called with: address = [" + address + "]");
         mService.connectToBleDevice(address);
+
     }
 
     @Override
@@ -627,8 +647,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
                     changeVisibility(mScanningLottieView, View.GONE);
 
                     EventBus.getDefault().post(new DeviceModel(result.getDevice().getName(), result.getDevice().getAddress(), R.drawable.ble_not_connected));
-                   // mRvAdapter.setDeviceList(mBleDeviceList);
-                   // mRvAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -670,4 +688,51 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
        System.out.println("start scan");
        startScanning();
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(StopScan event)
+    {
+        System.out.println("stop scan");
+        stopScanning();
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(ConnectToDevice event)
+    {
+        System.out.println("connect Eventbus");
+        if (selectedView != null){
+            selectedView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        selectedView = event.liste;
+        if(mService == null){
+            System.out.println("service null");
+        }else{
+            System.out.println("service nicht null");
+        }
+        connectToDevice(event.adress);
+    };
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Connected event)
+    {
+        if (event.v.equals(ConnectionStates.CONNECTED)){
+            selectedView.setBackgroundColor(Color.GREEN);
+        }
+        if (event.v.equals(ConnectionStates.DISCONNECTED)){
+            selectedView.setBackgroundColor(Color.RED);
+        }
+
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Bizeps event)
+    {
+        mService.getRepDetector().setActiveEnum(DrillEnums.BIZEPSCURLS);
+        if (thread != null) {
+            thread.interrupt();
+        }
+        thread = new AngularVelocityThread(mService, DrillEnums.BIZEPSCURLS);
+        thread.start();
+    };
+
 }

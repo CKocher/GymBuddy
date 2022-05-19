@@ -1,5 +1,6 @@
 package com.example.gymbuddy.adapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gymbuddy.EventBusMessages.ConnectToDevice;
 import com.example.gymbuddy.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -36,13 +40,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.Viewholder
     public void onBindViewHolder(@NonNull CourseAdapter.Viewholder holder, int position) {
         // to set data to textview and imageview of each card layout
         DeviceModel model = courseModelArrayList.get(position);
-        holder.courseNameTV.setText(model.getCourse_name());
-        holder.courseRatingTV.setText("BT-Adresse: "+model.getCourse_rating());
-        holder.courseIV.setImageResource(model.getCourse_image());
+        holder.courseNameTV.setText(model.getDevice_name());
+        holder.courseRatingTV.setText("BT-Adresse: "+model.getDevice_address());
+        holder.courseIV.setImageResource(model.getDevice_image());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Nummer: "+position + "gedrückt");
+                System.out.println("Nummer: "+position + " gedrückt! Listenlänge: " + courseModelArrayList.size());
+                v.setBackgroundColor(Color.LTGRAY);
+                EventBus.getDefault().post(new ConnectToDevice(courseModelArrayList.get(position).getDevice_name(), courseModelArrayList.get(position).getDevice_address(),v));
+
 
             }
         });

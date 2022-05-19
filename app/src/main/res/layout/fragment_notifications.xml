@@ -12,17 +12,53 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/headline"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bittw wählen Sie ihr Gerät aus:"
-            android:textAlignment="center"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/headline"
+                android:layout_width="700px"
+                android:layout_height="wrap_content"
+                android:text="Verfügbare Bluetooth Geräte:"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Scanning..." />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="50px"
+                android:layout_height="50px"
+                android:layout_below="@+id/button"
+                android:layout_alignStart="@+id/textview"
+                android:layout_alignLeft="@+id/textview"
+                android:layout_alignEnd="@+id/textView"
+                android:layout_alignRight="@+id/textView"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="50px"
+                android:progressDrawable="@drawable/circular_progress_bar" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/idRVCourse"
             android:layout_width="match_parent"
-            android:layout_height="1400px" />
+            android:layout_height="1550px" >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/bizepscurls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="read Bizepscurls" />
 
     </LinearLayout>
 

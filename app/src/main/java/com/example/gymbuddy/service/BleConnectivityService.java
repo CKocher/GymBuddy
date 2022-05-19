@@ -24,12 +24,17 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.example.gymbuddy.EventBusMessages.Connected;
 import com.example.gymbuddy.common.CharacteristicTypes;
+import com.example.gymbuddy.common.ConnectionStates;
 import com.example.gymbuddy.common.Constants;
 import com.example.gymbuddy.common.GattAttributes;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -97,7 +102,7 @@ public class BleConnectivityService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     int bondState = gatt.getDevice().getBondState();
-
+                    EventBus.getDefault().post(new Connected(ConnectionStates.CONNECTED));
                     // Take action depending on the bond state
                     if (bondState == BOND_NONE || bondState == BOND_BONDED) {
                         Log.d(TAG, "onConnectionStateChange: Connected to device [" + gatt.getDevice().getName() + "], " +
@@ -109,6 +114,7 @@ public class BleConnectivityService extends Service {
                     }
 
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    EventBus.getDefault().post(new Connected(ConnectionStates.DISCONNECTED));
                     // Close GATT server to clear resources properly
                     mBluetoothGatt.close();
                 }

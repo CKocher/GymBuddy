@@ -1,11 +1,14 @@
 package com.example.gymbuddy.ui.notifications;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +19,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gymbuddy.EventBusMessages.Bizeps;
 import com.example.gymbuddy.EventBusMessages.StartScan;
+import com.example.gymbuddy.EventBusMessages.StopScan;
 import com.example.gymbuddy.R;
 import com.example.gymbuddy.adapter.BLEDeviceListViewAdapter;
 import com.example.gymbuddy.adapter.CourseAdapter;
@@ -37,7 +42,7 @@ public class NotificationsFragment extends Fragment {
     private NotificationsViewModel notificationsViewModel;
     private FragmentNotificationsBinding binding;
     BLEDeviceListViewAdapter bleDeviceListViewAdapter;
-    private ArrayList<DeviceModel> courseModelArrayList;
+    private ArrayList<DeviceModel> courseModelArrayList = new ArrayList<>();;
     private RecyclerView courseRV;
     private CourseAdapter courseAdapter;
 
@@ -60,15 +65,9 @@ public class NotificationsFragment extends Fragment {
 
         courseRV = binding.getRoot().findViewById(R.id.idRVCourse);
 
-        // here we have created new array list and added data to it.
-        courseModelArrayList = new ArrayList<>();
-       /* courseModelArrayList.add(new DeviceModel("DSA in Java", 4, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("Java Course", 3, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("C++ COurse", 4, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("DSA in C++", 4, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("Kotlin for Android", 4, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("Java for Android", 4, R.drawable.ble_connected));
-        courseModelArrayList.add(new DeviceModel("HTML and CSS", 4, R.drawable.ble_connected));*/
+
+
+
 
         // we are initializing our adapter class and passing our arraylist to it.
         courseAdapter = new CourseAdapter(binding.getRoot().getContext(), courseModelArrayList);
@@ -79,7 +78,19 @@ public class NotificationsFragment extends Fragment {
         // in below two lines we are setting layoutmanager and adapter to our recycler view.
         courseRV.setLayoutManager(linearLayoutManager);
         courseRV.setAdapter(courseAdapter);
+        ProgressBar spinner=(ProgressBar) root.findViewById(R.id.progressBar);
+        spinner.setVisibility(View.VISIBLE);
         EventBus.getDefault().post(new StartScan());
+
+        Button bizeps = binding.getRoot().findViewById(R.id.bizepscurls);
+        bizeps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            EventBus.getDefault().post(new Bizeps());
+            }
+        });
+
+
         return root;
     }
 
@@ -88,6 +99,11 @@ public class NotificationsFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        courseAdapter.notifyDataSetChanged();
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(DeviceModel event)
@@ -95,4 +111,13 @@ public class NotificationsFragment extends Fragment {
         courseModelArrayList.add(event);
         courseAdapter.notifyDataSetChanged();
     };
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        EventBus.getDefault().post(new StopScan());
+    }
+
+
+
 }
