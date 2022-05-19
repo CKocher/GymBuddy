@@ -51,6 +51,7 @@ import com.example.gymbuddy.common.Constants;
 import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.contract.MainActivityContract;
 import com.example.gymbuddy.data.BleDeviceDataObject;
+import com.example.gymbuddy.databinding.ActivityMainBinding;
 import com.example.gymbuddy.model.DataManager;
 import com.example.gymbuddy.service.BleConnectivityService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -66,7 +67,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gymbuddy.databinding.ActivityMainBinding;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
