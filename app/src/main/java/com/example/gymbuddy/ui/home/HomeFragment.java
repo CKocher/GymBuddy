@@ -28,8 +28,8 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    View rootMember;
-    EventBus event = null;
+    LinearLayout noConnectionLayout;
+    View rootmember;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -37,9 +37,10 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-            EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
 
-
+        noConnectionLayout = root.findViewById(R.id.disconnectedLayout);
+        noConnectionLayout.setVisibility(View.GONE);
 
         Button button = root.findViewById(R.id.switch_to_bluetooth);
         button.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +50,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        rootMember = root;
+        rootmember = root;
+
         return root;
     }
 
@@ -64,7 +66,9 @@ public class HomeFragment extends Fragment {
     public void onEvent(IsConnectedResponse event)
     {
         if (event.isConnected){
-            rootMember.findViewById(R.id.disconnectedLayout).setVisibility(View.GONE);
+            rootmember.findViewById(R.id.disconnectedLayout).setVisibility(View.GONE);
+        }else{
+            rootmember.findViewById(R.id.disconnectedLayout).setVisibility(View.VISIBLE);
         }
 
     };
