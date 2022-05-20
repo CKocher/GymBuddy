@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.gymbuddy.EventBusMessages.ActivateDeactivate;
+import com.example.gymbuddy.EventBusMessages.EndOfWorkout;
 import com.example.gymbuddy.EventBusMessages.NewExercise;
 import com.example.gymbuddy.EventBusMessages.IsConnectedRequest;
 import com.example.gymbuddy.EventBusMessages.IsConnectedResponse;
@@ -51,6 +52,7 @@ public class HomeFragment extends Fragment {
     List<WorkoutExercise> uebungen;
     private int uebungscounter = 0;
     Button continueWorkout;
+    private String selectedItem;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -100,7 +102,7 @@ public class HomeFragment extends Fragment {
                         (root.getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
                         .show();
 
-
+                selectedItem = selectedItemText;
                 uebungen = ExpandableListDataItems.expandableDetailList.get(selectedItemText);
                 TextView workoutName = root.findViewById(R.id.currentWorkoutName);
                 workoutName.setText(selectedItemText);
@@ -164,8 +166,6 @@ public class HomeFragment extends Fragment {
                     EventBus.getDefault().post(new SwitchToDashboard());
                 }
 
-
-
             }
         });
 
@@ -203,9 +203,6 @@ public class HomeFragment extends Fragment {
     {
         TextView repcount = rootmember.findViewById(R.id.repCounterDisplay);
         TextView setcount = rootmember.findViewById(R.id.setcounterDisplay);
-
-
-
         if ((event.getNumber() < uebungen.get(uebungscounter).reps)){
             repcount.setText(String.valueOf(event.getNumber()));
             uebungen.get(uebungscounter).finishedReps++;
@@ -221,7 +218,8 @@ public class HomeFragment extends Fragment {
 
             if (uebungen.get(uebungscounter).finishedSets == uebungen.get(uebungscounter).sets){
                 uebungen.get(uebungscounter).succesfullyFinished = true;
-
+                ExpandableListDataItems.expandableDetailList.get(selectedItem).get(uebungscounter).image = R.drawable.ble_connected;
+                ExpandableListDataItems.expandableDetailList.get(selectedItem).get(uebungscounter).succesfullyFinished = true;
                 uebungscounter++;
                 continueWorkout.setText("Nächste Übung");
                 continueWorkout.setBackgroundColor(Color.GREEN);
@@ -230,6 +228,7 @@ public class HomeFragment extends Fragment {
 
                 if (uebungscounter >= uebungen.size()){
                     continueWorkout.setText("WORKOUT BEENDET");
+
                     continueWorkout.setBackgroundColor(Color.GREEN);
                 }
 
@@ -242,12 +241,10 @@ public class HomeFragment extends Fragment {
             }
 
         }
-
-
-
     };
 
     public void startNextExercise(){
+        System.out.println("start new exercise");
         if(uebungscounter < uebungen.size()){
             TextView exerciseNameLabel = rootmember.findViewById(R.id.exerciseNameLabel);
             if (uebungen.get(uebungscounter).drillEnums.equals(DrillEnums.BIZEPSCURLS)){

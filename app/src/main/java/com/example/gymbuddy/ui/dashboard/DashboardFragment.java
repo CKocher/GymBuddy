@@ -30,6 +30,7 @@ import com.example.gymbuddy.EventBusMessages.SwitchToHome;
 import com.example.gymbuddy.R;
 import com.example.gymbuddy.adapter.CustomizedExpandableListAdapter;
 import com.example.gymbuddy.adapter.ExpandableListDataItems;
+import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.data.WorkoutExercise;
 import com.example.gymbuddy.databinding.FragmentDashboardBinding;
 
@@ -66,7 +67,7 @@ public class DashboardFragment extends Fragment {
         });
 
         expandableListViewExample = (ExpandableListView) root.findViewById(R.id.expandableListViewSample);
-        expandableDetailList = ExpandableListDataItems.getData();
+        expandableDetailList = ExpandableListDataItems.expandableDetailList;
         expandableTitleList = new ArrayList<String>(expandableDetailList.keySet());
         expandableListAdapter = new CustomizedExpandableListAdapter(root.getContext(), expandableTitleList, expandableDetailList);
 
@@ -106,6 +107,9 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                EditText workoutName = root.findViewById(R.id.editTextTextPersonName);
+                String name = workoutName.getText().toString();
+
                 List<WorkoutExercise> workoutExercises = new ArrayList<>();
 
                 CheckBox bizepsCheckbox = root.findViewById(R.id.bizepsadderCheckbox);
@@ -122,7 +126,7 @@ public class DashboardFragment extends Fragment {
                     EditText bizsets2 = root.findViewById(R.id.bizcurlsNumbersets);
                     String bizsets = bizsets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(bizeps, Float.parseFloat(weight),Integer.parseInt(curls),Integer.parseInt(bizsets)));
+                    workoutExercises.add(new WorkoutExercise(bizeps, Float.parseFloat(weight),Integer.parseInt(curls),Integer.parseInt(bizsets),R.drawable.failed,name, DrillEnums.BIZEPSCURLS));
 
                 }
                 CheckBox trizepsCheckbox = root.findViewById(R.id.trizepsadderCheckbox);
@@ -139,7 +143,7 @@ public class DashboardFragment extends Fragment {
                     EditText trisets2 = root.findViewById(R.id.tripcurlsNumberSet);
                     String trisets = trisets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(trieps, Float.parseFloat(traiweight),Integer.parseInt(tricurls),Integer.parseInt(trisets)));
+                    workoutExercises.add(new WorkoutExercise(trieps, Float.parseFloat(traiweight),Integer.parseInt(tricurls),Integer.parseInt(trisets),R.drawable.failed,name, DrillEnums.TRIZEPSCURLS));
 
                 }
                 CheckBox squadCheckbox = root.findViewById(R.id.squadsadderCheckbox);
@@ -156,7 +160,7 @@ public class DashboardFragment extends Fragment {
                     EditText squadsets2 = root.findViewById(R.id.squadsNumbersets);
                     String squadsets = squadsets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(squads, Float.parseFloat(sweight),Integer.parseInt(squadcurls),Integer.parseInt(squadsets)));
+                    workoutExercises.add(new WorkoutExercise(squads, Float.parseFloat(sweight),Integer.parseInt(squadcurls),Integer.parseInt(squadsets),R.drawable.failed,name, DrillEnums.SQUADS));
 
                 }
                 CheckBox faceCheckbox = root.findViewById(R.id.facepullsadderCheckbox);
@@ -173,7 +177,7 @@ public class DashboardFragment extends Fragment {
                     EditText fsets2 = root.findViewById(R.id.facepNumbersets);
                     String fsets = fsets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(facep, Float.parseFloat(fweight),Integer.parseInt(facecurls),Integer.parseInt(fsets)));
+                    workoutExercises.add(new WorkoutExercise(facep, Float.parseFloat(fweight),Integer.parseInt(facecurls),Integer.parseInt(fsets),R.drawable.failed,name, DrillEnums.BUTTERFLY));
 
                     LinearLayout displaylayout = root.findViewById(R.id.displayLayout);
                     displaylayout.setVisibility(View.VISIBLE);
@@ -181,8 +185,7 @@ public class DashboardFragment extends Fragment {
                     adderLayout.setVisibility(View.GONE);
                 }
 
-                EditText workoutName = root.findViewById(R.id.editTextTextPersonName);
-                String name = workoutName.getText().toString();
+
 
 
 
@@ -215,6 +218,8 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+
+        refreshAttempt();
     }
 
     @Override

@@ -63,11 +63,22 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
         TextView exerciseProperties = (TextView) convertView.findViewById(R.id.idTVCourseRating);
         exerciseProperties.setText(String.valueOf(expandedListText.weight)+"kg x "+String.valueOf(expandedListText.reps)+ " reps x " + String.valueOf(expandedListText.sets)+ " sets");
 
-        if (expandedListText.succesfullyFinished){
-            ImageView img= convertView.findViewById(R.id.imageView4);
-            Drawable myDrawable = context.getResources().getDrawable(R.drawable.arrow_down);
-            img.setImageDrawable(myDrawable);
-        }
+
+
+            for (String name : ExpandableListDataItems.expandableDetailList.keySet()){
+                List<WorkoutExercise> liste = ExpandableListDataItems.expandableDetailList.get(name);
+                for (WorkoutExercise workoutExercise : liste){
+
+                    if (workoutExercise.succesfullyFinished){
+                        ImageView img= convertView.findViewById(R.id.imageView4);
+                       // Drawable myDrawable = context.getResources().getDrawable(workoutExercise.image);
+                        img.setImageResource(R.drawable.check);
+                    }
+                }
+            }
+
+
+
 
 
         return convertView;

@@ -1,5 +1,7 @@
 package com.example.gymbuddy.data;
 
+import android.graphics.drawable.Drawable;
+
 import com.example.gymbuddy.common.DrillEnums;
 
 public class WorkoutExercise {
@@ -13,12 +15,17 @@ public class WorkoutExercise {
     public DrillEnums drillEnums;
     public int progressPercentage = 75;
     public boolean succesfullyFinished = false;
+    public int image;
+    public String parent;
 
 
-    public WorkoutExercise(String uebungsname , float gewicht, int wiederholungen, int saetze){
+    public WorkoutExercise(String uebungsname , float gewicht, int wiederholungen, int saetze, int bild, String eltern, DrillEnums enumerate){
         name = uebungsname;
         weight = gewicht;
         reps = wiederholungen;
         sets = saetze;
+        image = bild;
+        parent = eltern;
+        drillEnums = enumerate;
     }
 }
