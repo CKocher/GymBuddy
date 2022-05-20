@@ -32,6 +32,7 @@ import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.data.WorkoutExercise;
 import com.example.gymbuddy.databinding.FragmentHomeBinding;
 
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -235,7 +236,7 @@ public class HomeFragment extends Fragment {
 
             }else{
                 continueWorkout.setText("Nächster Satz");
-                continueWorkout.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                continueWorkout.setBackgroundColor(Color.GREEN);
                 uebungen.get(uebungscounter).finishedReps = 0;
                 repcount.setText("0");
             }

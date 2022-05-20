@@ -41,6 +41,7 @@ import com.example.gymbuddy.EventBusMessages.StartScan;
 import com.example.gymbuddy.EventBusMessages.StopScan;
 import com.example.gymbuddy.EventBusMessages.SwitchToBluetoothFragment;
 import com.example.gymbuddy.EventBusMessages.SwitchToDashboard;
+import com.example.gymbuddy.EventBusMessages.SwitchToHome;
 import com.example.gymbuddy.adapter.DeviceModel;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
@@ -752,7 +753,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void onEvent(SwitchToDashboard event)
     {
         // navController.navigate(R.id.navigation_notifications);
+
         navView.setSelectedItemId(R.id.navigation_dashboard);
+
+    };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(SwitchToHome event)
+    {
+        // navController.navigate(R.id.navigation_notifications);
+
+        navView.setSelectedItemId(R.id.navigation_home);
 
     };
 }
