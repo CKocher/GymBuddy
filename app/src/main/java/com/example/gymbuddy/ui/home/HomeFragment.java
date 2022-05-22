@@ -142,6 +142,7 @@ public class HomeFragment extends Fragment {
                 String buttonText = continueWorkout.getText().toString();
                 if (buttonText.equals("Nächste Übung")){
                     continueWorkout.setText("Satz pausieren");
+                    continueWorkout.setBackgroundColor(getResources().getColor(R.color.purple_700));
                     startNextExercise();
                 }
 
@@ -159,6 +160,7 @@ public class HomeFragment extends Fragment {
                 if (buttonText.equals("weitermachen")){
                     EventBus.getDefault().post(new ActivateDeactivate(true));
                     continueWorkout.setText("Satz pausieren");
+                    continueWorkout.setBackgroundColor(getResources().getColor(R.color.purple_700));
                 }
 
                 if (buttonText.equals("WORKOUT BEENDET")){

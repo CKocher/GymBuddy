@@ -20,12 +20,12 @@ public class ExpandableListDataItems {
 
         List<WorkoutExercise> workoutExercises = new ArrayList<>();
 
-        WorkoutExercise uebung1 = new WorkoutExercise("Bizepscurls", (float)150.3, 2, 2, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.BIZEPSCURLS);
+        WorkoutExercise uebung1 = new WorkoutExercise("Bizepscurls", (float)15.0, 8, 3, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.BIZEPSCURLS);
         uebung1.finishedReps++;
 
 
 
-        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.6, 2, 2, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.SEITHEBEN);
+        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.0, 4, 3, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.SEITHEBEN);
         uebung2.finishedReps = 5;
         workoutExercises.add(uebung1);
         workoutExercises.add(uebung2);

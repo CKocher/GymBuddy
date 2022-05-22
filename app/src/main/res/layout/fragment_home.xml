@@ -12,17 +12,33 @@
     <LinearLayout
         android:id="@+id/disconnectedLayout"
         android:layout_width="match_parent"
-        android:layout_height="308dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="Armband nicht verbunden"
+            android:layout_marginTop="50dp"
+            android:text="1. Armband wie unten gezeigt anlegen"
             android:textAlignment="center"
-            android:textSize="30dp" />
+            android:textSize="24dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. Armband einschalten"
+            android:textAlignment="center"
+            android:textSize="24dp"/>
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. via Bluetooth verbinden"
+            android:textAlignment="center"
+            android:textSize="24dp"/>
 
         <Button
             android:id="@+id/switch_to_bluetooth"
@@ -30,6 +46,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Bluetooth Einstellungen öffnen" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="398dp"
+            android:src="@drawable/first" />
 
     </LinearLayout>
 

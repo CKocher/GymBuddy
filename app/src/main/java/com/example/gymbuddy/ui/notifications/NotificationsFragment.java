@@ -75,13 +75,6 @@ public class NotificationsFragment extends Fragment {
         spinner.setVisibility(View.VISIBLE);
         EventBus.getDefault().post(new StartScan());
 
-        Button bizeps = binding.getRoot().findViewById(R.id.bizepscurls);
-        bizeps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
 
         return root;

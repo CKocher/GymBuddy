@@ -96,7 +96,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " -> " + expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).name, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " -> " + expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).name, Toast.LENGTH_SHORT).show();
 
                 return false;
             }

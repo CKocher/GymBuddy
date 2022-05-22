@@ -54,12 +54,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-            android:id="@+id/bizepscurls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="read Bizepscurls" />
-
     </LinearLayout>
 
 </RelativeLayout>

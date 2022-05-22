@@ -198,12 +198,13 @@
             <EditText
                 android:id="@+id/squadsNumberweights"
                 android:layout_width="50dp"
+                tools:hint="kg"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:ems="10"
-                tools:hint="kg"
+
                 android:inputType="numberDecimal"
                 />
 
