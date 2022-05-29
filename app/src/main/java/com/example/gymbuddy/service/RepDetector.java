@@ -37,9 +37,17 @@ public class RepDetector {
             return checkBooleans(70,0,-70,pitch);
         }
 
-        if (activeEnum.equals(DrillEnums.SEITHEBEN)){
-            return checkBooleans(-20, -45,-70,pitch);
+        if (activeEnum.equals(DrillEnums.TRIZEPSCURLS)){
+            return checkBooleans(0, 20,40,pitch);
         }
+        if (activeEnum.equals(DrillEnums.SEITHEBEN)){
+            return checkBooleans(15, 0,-90,yaw);
+        }
+        if (activeEnum.equals(DrillEnums.BRUSTHEBEN)){
+            return checkBooleans(-40, -25,50,pitch);
+        }
+
+
         return false;
     }
 

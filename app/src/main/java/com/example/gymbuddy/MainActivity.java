@@ -43,6 +43,7 @@ import com.example.gymbuddy.EventBusMessages.SwitchToBluetoothFragment;
 import com.example.gymbuddy.EventBusMessages.SwitchToDashboard;
 import com.example.gymbuddy.EventBusMessages.SwitchToHome;
 import com.example.gymbuddy.adapter.DeviceModel;
+import com.example.gymbuddy.adapter.ExpandableListDataItems;
 import com.example.gymbuddy.backgroundThread.AngularVelocityThread;
 import com.example.gymbuddy.common.ConnectionStates;
 import com.example.gymbuddy.common.Constants;
@@ -50,6 +51,7 @@ import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.contract.MainActivityContract;
 import com.example.gymbuddy.data.BleDeviceDataObject;
 
+import com.example.gymbuddy.data.WorkoutExercise;
 import com.example.gymbuddy.databinding.ActivityMainBinding;
 import com.example.gymbuddy.model.DataManager;
 import com.example.gymbuddy.service.BleConnectivityService;
@@ -66,7 +68,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View{
@@ -110,7 +117,41 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        FileInputStream fis = null;
+        try {
+            fis = this.getApplicationContext().openFileInput("storageFile.ser");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
+        if(fis != null){
+            ObjectInputStream is = null;
+            try {
+                is = new ObjectInputStream(fis);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                ExpandableListDataItems.expandableDetailList = (HashMap<String, List<WorkoutExercise>>) is.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+       // ExpandableListDataItems.initialize();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EventBus.getDefault().register(this);
@@ -723,13 +764,48 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(NewExercise event)
     {
-        mService.getRepDetector().setActiveEnum(DrillEnums.BIZEPSCURLS);
-        if (thread != null) {
-            thread.interrupt();
+
+        if (event.getKind().equals(DrillEnums.BIZEPSCURLS)){
+            mService.getRepDetector().setActiveEnum(DrillEnums.BIZEPSCURLS);
+            if (thread != null) {
+                thread.interrupt();
+            }
+            thread = new AngularVelocityThread(mService, DrillEnums.BIZEPSCURLS);
+            thread.start();
         }
-        thread = new AngularVelocityThread(mService, DrillEnums.BIZEPSCURLS);
-        thread.start();
-    };
+        if (event.getKind().equals(DrillEnums.TRIZEPSCURLS)){
+            mService.getRepDetector().setActiveEnum(DrillEnums.TRIZEPSCURLS);
+            if (thread != null) {
+                thread.interrupt();
+            }
+            thread = new AngularVelocityThread(mService, DrillEnums.TRIZEPSCURLS);
+            thread.start();
+        }
+
+        if (event.getKind().equals(DrillEnums.BRUSTHEBEN)){
+            mService.getRepDetector().setActiveEnum(DrillEnums.BRUSTHEBEN);
+            if (thread != null) {
+                thread.interrupt();
+            }
+            thread = new AngularVelocityThread(mService, DrillEnums.BRUSTHEBEN);
+            thread.start();
+        }
+
+        if (event.getKind().equals(DrillEnums.SEITHEBEN)){
+            mService.getRepDetector().setActiveEnum(DrillEnums.SEITHEBEN);
+            if (thread != null) {
+                thread.interrupt();
+            }
+            thread = new AngularVelocityThread(mService, DrillEnums.SEITHEBEN);
+            thread.start();
+        }
+
+
+
+
+        }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(SwitchToBluetoothFragment event)

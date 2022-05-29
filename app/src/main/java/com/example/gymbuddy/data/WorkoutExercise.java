@@ -4,7 +4,9 @@ import android.graphics.drawable.Drawable;
 
 import com.example.gymbuddy.common.DrillEnums;
 
-public class WorkoutExercise {
+import java.io.Serializable;
+
+public class WorkoutExercise implements Serializable {
     public String name;
     public float weight;
     public int reps;

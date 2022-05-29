@@ -4,13 +4,16 @@ import com.example.gymbuddy.R;
 import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.data.WorkoutExercise;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ExpandableListDataItems {
     public static HashMap<String, List<WorkoutExercise>> expandableDetailList = new HashMap<>();
-    public static HashMap<String, List<WorkoutExercise>> getData() {
+    public static HashMap<String, List<WorkoutExercise>> initialize() {
 
         List<WorkoutExercise> legdayExercises = new ArrayList<>();
 
@@ -25,7 +28,7 @@ public class ExpandableListDataItems {
 
 
 
-        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.0, 4, 3, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.SEITHEBEN);
+        WorkoutExercise uebung2 = new WorkoutExercise("Seitheben", (float)10.0, 7, 1, R.drawable.failed,"Brust - 16.05.2022", DrillEnums.BIZEPSCURLS);
         uebung2.finishedReps = 5;
         workoutExercises.add(uebung1);
         workoutExercises.add(uebung2);
@@ -36,5 +39,7 @@ public class ExpandableListDataItems {
 
         return expandableDetailList;
     }
+
+
 
 }

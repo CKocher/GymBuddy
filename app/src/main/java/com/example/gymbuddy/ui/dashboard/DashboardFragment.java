@@ -1,8 +1,6 @@
 package com.example.gymbuddy.ui.dashboard;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.database.DataSetObserver;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,6 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +26,19 @@ import com.example.gymbuddy.EventBusMessages.SwitchToDashboard;
 import com.example.gymbuddy.EventBusMessages.SwitchToHome;
 import com.example.gymbuddy.R;
 import com.example.gymbuddy.adapter.CustomizedExpandableListAdapter;
+import com.example.gymbuddy.adapter.DeleteListviewAdapter;
 import com.example.gymbuddy.adapter.ExpandableListDataItems;
 import com.example.gymbuddy.common.DrillEnums;
 import com.example.gymbuddy.data.WorkoutExercise;
 import com.example.gymbuddy.databinding.FragmentDashboardBinding;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +55,13 @@ public class DashboardFragment extends Fragment {
     ListView listView;
     View root;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
+
+
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
@@ -77,7 +84,7 @@ public class DashboardFragment extends Fragment {
         expandableListViewExample.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-             //   Toast.makeText(root.getApplicationContext(), expandableTitleList.get(groupPosition) + " List Expanded.", Toast.LENGTH_SHORT).show();
+          //      Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " List Expanded.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -85,7 +92,7 @@ public class DashboardFragment extends Fragment {
         expandableListViewExample.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
-              //  Toast.makeText(getApplicationContext(), expandableTitleList.get(groupPosition) + " List Collapsed.", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getContext(), expandableTitleList.get(groupPosition) + " List Collapsed.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,13 +101,27 @@ public class DashboardFragment extends Fragment {
         // we may need to add further steps according to the requirements
         expandableListViewExample.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-               // Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " -> " + expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).name, Toast.LENGTH_SHORT).show();
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+             //   Toast.makeText(root.getContext(), expandableTitleList.get(groupPosition) + " -> " + expandableDetailList.get(expandableTitleList.get(groupPosition)).get(childPosition).name, Toast.LENGTH_SHORT).show();
+
+
 
                 return false;
             }
         });
+
+        Button deny = root.findViewById(R.id.denyNeWorkout);
+        deny.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout display3ayout = root.findViewById(R.id.adderLayout);
+                display3ayout.setVisibility(View.GONE);
+                LinearLayout adder2Layout = root.findViewById(R.id.displayLayout);
+                adder2Layout.setVisibility(View.VISIBLE);
+            }
+        });
+
+
 
         Button accept = root.findViewById(R.id.acceptNewWorkout);
         accept.setOnClickListener(new View.OnClickListener() {
@@ -160,12 +181,12 @@ public class DashboardFragment extends Fragment {
                     EditText squadsets2 = root.findViewById(R.id.squadsNumbersets);
                     String squadsets = squadsets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(squads, Float.parseFloat(sweight),Integer.parseInt(squadcurls),Integer.parseInt(squadsets),R.drawable.failed,name, DrillEnums.SQUADS));
+                    workoutExercises.add(new WorkoutExercise(squads, Float.parseFloat(sweight),Integer.parseInt(squadcurls),Integer.parseInt(squadsets),R.drawable.failed,name, DrillEnums.BRUSTHEBEN));
 
                 }
                 CheckBox faceCheckbox = root.findViewById(R.id.facepullsadderCheckbox);
                 if (faceCheckbox.isChecked()){
-                    TextView facesadder = root.findViewById(R.id.bizepsadder);
+                    TextView facesadder = root.findViewById(R.id.facepullssadder);
                     String facep = facesadder.getText().toString();
 
                     EditText facereps = root.findViewById(R.id.facepNumber);
@@ -177,7 +198,7 @@ public class DashboardFragment extends Fragment {
                     EditText fsets2 = root.findViewById(R.id.facepNumbersets);
                     String fsets = fsets2.getText().toString();
 
-                    workoutExercises.add(new WorkoutExercise(facep, Float.parseFloat(fweight),Integer.parseInt(facecurls),Integer.parseInt(fsets),R.drawable.failed,name, DrillEnums.BUTTERFLY));
+                    workoutExercises.add(new WorkoutExercise(facep, Float.parseFloat(fweight),Integer.parseInt(facecurls),Integer.parseInt(fsets),R.drawable.failed,name, DrillEnums.SEITHEBEN));
 
                     LinearLayout displaylayout = root.findViewById(R.id.displayLayout);
                     displaylayout.setVisibility(View.VISIBLE);
@@ -190,21 +211,65 @@ public class DashboardFragment extends Fragment {
 
 
               ExpandableListDataItems.expandableDetailList.put(name,workoutExercises);
-              refreshAttempt();
+                FileOutputStream fos = null;
+                try {
+                    fos = root.getContext().openFileOutput("storageFile.ser", Context.MODE_PRIVATE);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                ObjectOutputStream os = null;
+                try {
+                    os = new ObjectOutputStream(fos);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                        os.writeObject(ExpandableListDataItems.expandableDetailList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        os.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                refreshAttempt();
                 EventBus.getDefault().post(new SwitchToHome());
             }
         });
 
-        Button button = root.findViewById(R.id.button23);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button addbutton = root.findViewById(R.id.button23);
+        addbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExpandableListDataItems.expandableDetailList.put("Krasses Workout - 16.05.2020",new ArrayList<>());
+
                 LinearLayout displaylayout = root.findViewById(R.id.displayLayout);
                 displaylayout.setVisibility(View.GONE);
                 LinearLayout adderLayout = root.findViewById(R.id.adderLayout);
                 adderLayout.setVisibility(View.VISIBLE);
                 EventBus.getDefault().post(new SwitchToDashboard());
+            }
+        });
+
+        DeleteListviewAdapter deleteListviewAdapter = new DeleteListviewAdapter(root , this);
+        ListView listView = root.findViewById(R.id.deleteListView);
+        listView.setAdapter(deleteListviewAdapter);
+
+        Button delButton = root.findViewById(R.id.delete_workout_button);
+        delButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout displaylayout = root.findViewById(R.id.displayLayout);
+                displaylayout.setVisibility(View.GONE);
+                LinearLayout adderLayout = root.findViewById(R.id.deleteLayout);
+                adderLayout.setVisibility(View.VISIBLE);
             }
         });
 

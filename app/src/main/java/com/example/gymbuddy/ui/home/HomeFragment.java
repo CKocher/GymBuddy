@@ -1,7 +1,6 @@
 package com.example.gymbuddy.ui.home;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.gymbuddy.EventBusMessages.ActivateDeactivate;
-import com.example.gymbuddy.EventBusMessages.EndOfWorkout;
 import com.example.gymbuddy.EventBusMessages.NewExercise;
 import com.example.gymbuddy.EventBusMessages.IsConnectedRequest;
 import com.example.gymbuddy.EventBusMessages.IsConnectedResponse;
@@ -74,12 +72,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
         rootmember = root;
         root.findViewById(R.id.activeWorkout).setVisibility(View.GONE);
         List<String> dings = new ArrayList<>();
-        ExpandableListDataItems.getData();
 
-        HashMap<String,List<WorkoutExercise>> datamap = ExpandableListDataItems.getData();
+
+        HashMap<String,List<WorkoutExercise>> datamap = ExpandableListDataItems.expandableDetailList;
 
         for(String key : datamap.keySet()){
             dings.add(key);
@@ -98,9 +98,7 @@ public class HomeFragment extends Fragment {
                 // Notify the selected item text
 
 
-                Toast.makeText
-                        (root.getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
-                        .show();
+            //    Toast.makeText(root.getContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT).show();
 
                 selectedItem = selectedItemText;
                 uebungen = ExpandableListDataItems.expandableDetailList.get(selectedItemText);
@@ -122,6 +120,16 @@ public class HomeFragment extends Fragment {
                 root.findViewById(R.id.disconnectedLayout).setVisibility(View.GONE);
                 root.findViewById(R.id.startactivity_layout).setVisibility(View.GONE);
                 root.findViewById(R.id.activeWorkout).setVisibility(View.VISIBLE);
+                Button abortWorkout = root.findViewById(R.id.abort);
+                abortWorkout.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        uebungen.clear();
+                                                        EventBus.getDefault().post(new ActivateDeactivate(false));
+                                                        EventBus.getDefault().post(new SwitchToDashboard());
+                                                    }
+                                                }
+                );
                 startNextExercise();
             }
         });
@@ -256,11 +264,28 @@ public class HomeFragment extends Fragment {
                 NewExercise newExercise = new NewExercise(DrillEnums.BIZEPSCURLS);
                 EventBus.getDefault().post(newExercise);
             }
+
+            if (uebungen.get(uebungscounter).drillEnums.equals(DrillEnums.TRIZEPSCURLS)){
+                System.out.println("Bizepscurls");
+
+                exerciseNameLabel.setText(uebungen.get(uebungscounter).name + " - " + uebungen.get(uebungscounter).weight + "kg");
+                NewExercise newExercise = new NewExercise(DrillEnums.TRIZEPSCURLS);
+                EventBus.getDefault().post(newExercise);
+            }
+
             if (uebungen.get(uebungscounter).drillEnums.equals(DrillEnums.SEITHEBEN)){
 
                 System.out.println("Seitheben");
                 exerciseNameLabel.setText(uebungen.get(uebungscounter).name + " - " + uebungen.get(uebungscounter).weight + "kg");
                 NewExercise newExercise = new NewExercise(DrillEnums.SEITHEBEN);
+                EventBus.getDefault().post(newExercise);
+            }
+
+            if (uebungen.get(uebungscounter).drillEnums.equals(DrillEnums.BRUSTHEBEN)){
+
+                System.out.println("Seitheben");
+                exerciseNameLabel.setText(uebungen.get(uebungscounter).name + " - " + uebungen.get(uebungscounter).weight + "kg");
+                NewExercise newExercise = new NewExercise(DrillEnums.BRUSTHEBEN);
                 EventBus.getDefault().post(newExercise);
             }
 

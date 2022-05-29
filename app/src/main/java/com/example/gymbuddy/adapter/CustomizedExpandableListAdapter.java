@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gymbuddy.R;
 import com.example.gymbuddy.data.WorkoutExercise;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> expandableTitleList;
     private HashMap<String, List<WorkoutExercise>> expandableDetailList;
+    private List<String> checkboxList = new ArrayList<>();
 
 
 
@@ -122,6 +126,21 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
         TextView listTitleTextView = (TextView) convertView.findViewById(R.id.listTitle);
         listTitleTextView.setTypeface(null, Typeface.BOLD);
         listTitleTextView.setText(listTitle);
+
+       /* CheckBox deleteBox = convertView.findViewById(R.id.deleteCheckbox);
+        deleteBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (deleteBox.isChecked()){
+                    checkboxList.add(listTitle);
+                    Toast.makeText(v.getContext(),  deleteBox.isChecked()+" " + listTitle, Toast.LENGTH_SHORT).show();
+                }else{
+                    checkboxList.remove(listTitle);
+                }
+            }
+        });*/
+
+
         return convertView;
     }
 
@@ -134,7 +153,7 @@ public class CustomizedExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     // Whether the child at the specified position is selectable.
     public boolean isChildSelectable(int listPosition, int expandedListPosition) {
-        return true;
+        return false;
     }
 }
 
